@@ -1,0 +1,30 @@
+name: Build Windows Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Native Windows Executable
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Compile Release Binary
+        run: |
+          cargo build --release --bin tuwunel
+
+      - name: Locate and Upload Executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: tuwunel-windows-x64
+          path: |
+            target/release/tuwunel.exe
+            target/x86_64-pc-windows-msvc/release/tuwunel.exe
